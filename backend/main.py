@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from openclaw_adapter import openclaw_run
-from scanner import scan_code  # ✅ integrate scanner
+from scanner import scan_code
 
 app = Flask(__name__)
 CORS(app)
@@ -19,7 +19,7 @@ def analyze():
         return jsonify({"error": "No code provided"}), 400
 
     try:
-        # ✅ STEP 1: Run scanner
+        # Step 1: scan code
         scan_results = scan_code(code)
 
         if not scan_results:
@@ -28,10 +28,9 @@ def analyze():
                 "message": "No deprecated APIs found"
             })
 
-        # ✅ STEP 2: Take first detected issue
+        # Step 2: take first issue
         detection = scan_results[0]
 
-        # Ensure required keys exist (safe fallback)
         input_data = {
             "old_usage": detection.get("old_usage", "unknown"),
             "new_api": detection.get("new_api", "unknown"),
@@ -39,7 +38,7 @@ def analyze():
             "code_snippet": code
         }
 
-        # ✅ STEP 3: Send to AI agent
+        # Step 3: AI agent
         result = openclaw_run(input_data)
 
         return jsonify({
@@ -53,6 +52,7 @@ def analyze():
             "status": "error",
             "message": str(e)
         }), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
