@@ -1,10 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-# from scanner import scan_code       ← comment this for now
-# from agent import generate_migration ← comment this for now
+from openclaw_adapter import openclaw_run
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"status": "API running"})
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
@@ -14,8 +17,25 @@ def analyze():
     if not code:
         return jsonify({"error": "No code provided"}), 400
 
-    # Temporary dummy response until A and B finish
-    return jsonify({"status": "backend working!", "code_received": code[:50]})
+    # Temporary mapping (until scanner integration)
+    input_data = {
+        "old_usage": "openai.ChatCompletion.create",
+        "new_api": "openai.chat.completions.create",
+        "reason": "Removed in OpenAI SDK v1.0",
+        "code_snippet": code
+    }
+
+    try:
+        result = openclaw_run(input_data)
+        return jsonify({
+            "status": "success",
+            "result": result
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
