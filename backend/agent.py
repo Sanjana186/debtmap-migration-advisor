@@ -17,9 +17,9 @@ client = OpenAI(
 BASE_DIR = Path(__file__).resolve().parent
 
 def load_openclaw():
-    soul = (BASE_DIR / "SOUL.md").read_text()
-    skill = (BASE_DIR / "SKILL.md").read_text()
-    beat = (BASE_DIR / "HEARTBEAT.md").read_text()
+    soul = (BASE_DIR.parent / "SOUL.md").read_text()
+    skill = (BASE_DIR.parent / "SKILL.md").read_text()
+    beat = (BASE_DIR.parent / "HEARTBEAT.md").read_text()
     return f"{soul}\n\n{skill}\n\n{beat}"
 
 def run_agent(detection_item: dict) -> dict:

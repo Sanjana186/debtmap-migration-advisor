@@ -71,3 +71,13 @@ Paste code → Detect issues → Get migration plan
 * GitHub integration
 * Multi-language support
 * Auto-fix PR generation
+
+## OpenClaw Integration
+
+This project follows an OpenClaw-inspired agent architecture:
+
+- SOUL.md → defines agent behavior
+- SKILL.md → defines task execution
+- HEARTBEAT.md → defines activation logic
+
+The AI agent processes detected deprecated APIs and generates structured migration guidance using an LLM backend.
